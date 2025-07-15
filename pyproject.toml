@@ -1,0 +1,67 @@
+# pyproject.toml
+# ---------------------------------------------------------------------------
+# build backend (PEP 517 / PEP 518)
+# ---------------------------------------------------------------------------
+[build-system]
+requires      = ["setuptools>=65", "wheel"]    # 65+ needed for the ‘pyproject’-only layout
+build-backend = "setuptools.build_meta"
+
+# ---------------------------------------------------------------------------
+# core project metadata (PEP 621)
+# ---------------------------------------------------------------------------
+[project]
+name            = "admin-page"                          # PyPI name (change later)
+version         = "0.1.0"                              # bump with each release
+description     = "Azure-authenticated Flask admin UI for Remeo data flows"
+readme          = "README.md"
+requires-python = ">=3.10"
+authors         = [{ name = "Your Team", email = "dev@example.com" }]
+
+# Runtime deps (same list you keep in requirements.txt)
+dependencies = [
+  "flask>=3.0.0,<4",
+  "flask-sqlalchemy>=3.1",
+  "flask-session>=0.5",
+  "flask-wtf>=1.2",
+  "msal>=1.25",
+  "python-dotenv>=1.0",
+  "pyodbc>=5.0",                # or whatever driver you pin
+]
+
+# Optional extras — pip install "admin-page[dev]"
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2",
+  "pytest-dotenv",
+  "black",
+  "ruff",
+  "pre-commit",
+  "flask-migrate",
+]
+
+# ---------------------------------------------------------------------------
+# setuptools-specific settings
+# ---------------------------------------------------------------------------
+[tool.setuptools]
+# where to search for packages:  src/<top-level-package>/...
+package-dir = {"" = "src"}          # tells setuptools “root = src”
+
+[tool.setuptools.packages.find]     # <-- THIS is what the earlier review referenced
+where      = ["src"]
+exclude     = ["tests*", "docs*"]   # optional
+
+# ---------------------------------------------------------------------------
+# tool configs (example: ruff & black, picked up automatically)
+# ---------------------------------------------------------------------------
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+exclude = ["tests"]
+
+[tool.ruff.lint] 
+select = ["E", "F", "I", "UP"]      # basic errors, isort, pyupgrade
+

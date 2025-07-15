@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Authentication error</h2>
+  <p>{{ error }}</p>
+  <a href="{{ url_for('auth.login') }}">Try again</a>
+{% endblock %}

@@ -1,4 +1,5 @@
 customer_configs/
+local_tests/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

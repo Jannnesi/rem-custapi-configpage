@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}API Admin Page{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+{% endblock %}
+
+{% block content %}
+    <main class="landing">
+      <h1>Navigointi</h1>
+
+      <section class="actions">
+        <a class="card create"
+          href="{{ url_for('customers.index') }}">
+          <h2>Asiakashallinta</h2>
+          <p>Luo, muokkaa tai poista asiakkaita.</p>
+        </a>
+
+        <a class="card basecols"
+          href="{{ url_for('settings.index') }}">
+          <h2>Asetukset</h2>
+          <p>Muokkaa asetuksia.</p>
+        </a>
+
+        <a class="card manual"
+          href="{{ url_for('manual_run.index') }}">
+          <h2>Manuaalinen ajo</h2>
+          <p>Valitse suoritettavat asiakkaat.</p>
+        </a>
+      </section>
+    </main>
+{% endblock %}
+
+
+
