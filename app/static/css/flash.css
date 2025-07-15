@@ -1,0 +1,33 @@
+.flash {
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  color: #fff;
+  text-align: center;
+  opacity: 0; 
+  transform: translateY(-8px);
+  transition: opacity 300ms ease, transform 300ms ease;
+  margin: .4rem 0; padding: .6rem .8rem;
+  border-radius: 4px; color:#fff;
+}
+
+.flash.info    { background:#2b8acc; }
+.flash.success { background:#2a9d8f; }
+.flash.warning { background:#e9c46a; }
+.flash.error   { background:#e76f51; }
+.flash.show    { opacity: 1; transform: translateY(0); }
+
+.flash .close-btn {
+  float:right; 
+  border:none; 
+  background:transparent; 
+  color:inherit;
+  font-size:1rem; 
+  cursor:pointer; 
+  line-height:1;
+  padding:0; 
+  margin:-.2rem -0.4rem 0 0;
+  align-items: center;
+  justify-content: center;
+  margin: auto 0;
+}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Asiakashallinta{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('settings.static', filename='settings.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1>Asetukset</h1>
+    <form method="post">
+      {{ form.hidden_tag() }}
+
+      <!-- ⇢ e-mail list ---------------------------------------------------- -->
+      <fieldset>
+        <legend>Sähköpostit virheviesteille</legend>
+        <div id="emailContainer">
+          {# render existing FieldList entries #}
+          {% for sub in form.emails %}
+            <div class="email-group">
+              <div class="form-group">
+                {{ sub.address.label }}<br>
+                {{ sub.address(class="form-control") }}
+              </div>
+              <div class="form-group">
+                {{ sub.display_name.label }}<br>
+                {{ sub.display_name(class="form-control") }}
+              </div>
+              <button type="button" class="removeEmailBtn">Poista</button>
+            </div>
+          {% endfor %}
+        </div>
+
+        {# >>> no empty_form – a plain “prototype” with __index__ markers #}
+        <template id="emailTemplate">
+          <div class="email-group">
+            <div class="form-group">
+              <label for="emails-__index__-address">Sähköposti</label><br>
+              <input type="email"
+                    name="emails-__index__-address"
+                    id="emails-__index__-address"
+                    required class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="emails-__index__-display_name">Näyttönimi</label><br>
+              <input type="text"
+                    name="emails-__index__-display_name"
+                    id="emails-__index__-display_name"
+                    class="form-control">
+            </div>
+            <button type="button" class="removeEmailBtn">Poista</button>
+          </div>
+        </template>
+
+        <button type="button" id="addEmailBtn">+ Lisää sähköposti</button>
+      </fieldset>
+
+      <!-- ⇢ retry settings ------------------------------------------------- -->
+      <fieldset>
+        <legend>Virheenkäsittely</legend>
+        <div class="form-group">
+          {{ form.retry_attempts.label }}<br>
+          {{ form.retry_attempts(class="form-control") }}
+          {% for e in form.retry_attempts.errors %}<div class="error">{{ e }}</div>{% endfor %}
+          <small>Epäonnistuneiden asiakkaiden uudelleenyrityskertojen määrä.</small>
+        </div>
+        <div class="form-group">
+          {{ form.retry_delay.label }}<br>
+          {{ form.retry_delay(class="form-control") }}
+          {% for e in form.retry_delay.errors %}<div class="error">{{ e }}</div>{% endfor %}
+          <small>Kuinka kauan odotetaan ennen seuraavaa uudelleenyritystä (sek).</small>
+        </div>
+      </fieldset>
+
+      {{ form.submit(class="submit-btn") }}
+      <button type="button" id="cancelBtn" class="submit-btn"
+              style="margin-top:8px;background:#777;" onclick="window.history.back();">Peruuta</button>
+    </form>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('settings.static', filename='settings.js') }}"></script>
+{% endblock %}

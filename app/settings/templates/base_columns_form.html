@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Asiakashallinta{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('settings.static', filename='settings.css') }}">
+{% endblock %}
+{% block content %}
+  <div class="container">
+    <form id="baseColumnsForm" method="post">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <fieldset>
+        <legend>Perussarakkeet</legend>
+
+        <div class="base-columns-header">
+          <span class="header-spacer"></span>
+          <span>Sarakeavain</span>
+          <span>Näyttönimi</span>
+          <span>Tietotyyppi</span>
+          <span>Merkkijonon pituus</span>
+          <span>Desimaalit</span>
+          <span class="header-spacer"></span>
+        </div>
+
+        <div id="baseColumnsContainer">
+          {% for key, col in base_columns.items() %}
+            {# loop.index0 = 0-based counter  #}
+            {% set i = loop.index0 %}
+          <div class="base-columns-group">
+            <button type="button" class="removeColumnBtn">Poista</button>
+
+            <input type="hidden" name="columns-{{ i }}-order" value="{{ col.order }}">
+
+            <div class="form-group">
+              <input type="text"
+                    name="columns-{{ i }}-key"
+                    value="{{ key }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+              <input type="text"
+                    name="columns-{{ i }}-name"
+                    value="{{ col.name }}"
+                    required>
+            </div>
+
+            <div class="form-group">
+              <select name="columns-{{ i }}-dtype">
+                <option value="string" {% if col.dtype == 'string' %}selected{% endif %}>String</option>
+                <option value="float"  {% if col.dtype == 'float'  %}selected{% endif %}>Float</option>
+                <option value="int"    {% if col.dtype == 'int'    %}selected{% endif %}>Integer</option>
+              </select>
+            </div>
+
+            <div class="form-group length-group">
+              <input type="number"
+                    name="columns-{{ i }}-length"
+                    min="1"
+                    value="{{ col.length | default('') }}">
+            </div>
+
+            <div class="form-group decimals-group">
+              <input type="number"
+                    name="columns-{{ i }}-decimals"
+                    min="0"
+                    value="{{ col.decimals | default('') }}">
+            </div>
+
+            <span class="drag-handle" title="Raahaa järjestykseen">≡</span>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- template for JS-added rows -->
+        <template id="baseColumnTemplate">
+          <div class="base-columns-group">
+            <button type="button" class="removeColumnBtn">Poista</button>
+
+            <input type="hidden" name="order">
+
+            <div class="form-group">
+              <input type="text"   name="key"      required>
+            </div>
+            <div class="form-group">
+              <input type="text"   name="name"     required>
+            </div>
+            <div class="form-group">
+              <select name="dtype" required>
+                <option value="">—</option>  
+                <option value="string">String</option>
+                <option value="float">Float</option>
+                <option value="int">Integer</option>
+              </select>
+            </div>
+            <div class="form-group length-group">
+              <input type="number" name="length"   min="1">
+            </div>
+            <div class="form-group decimals-group">
+              <input type="number" name="decimals" min="0">
+            </div>
+
+            <span class="drag-handle" title="Raahaa järjestykseen">≡</span>
+          </div>
+        </template>
+
+        <button type="button" id="addBaseColumnBtn">+ Lisää perussarake</button>
+        <button type="submit" class="submit-btn">Tallenna</button>
+        <button type="button" id="cancelBtn" class="submit-btn"
+                style="margin-top:8px;background:#777;" onclick="window.history.back();">Peruuta</button>
+      </fieldset>
+    </form>
+  </div>
+  {% block scripts %}
+    <script src="{{ url_for('settings.static', filename='base_columns.js') }}"></script>
+  {% endblock %}
+{% endblock %}

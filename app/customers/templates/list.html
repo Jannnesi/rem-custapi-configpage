@@ -1,0 +1,44 @@
+<!-- list.html -->
+
+{% extends "base.html" %}
+{% block title %}Asiakkaat{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet"
+        href="{{ url_for('customers.static', filename='list.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <form id="enabledForm" method="">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="method" value="update_enabled">
+    <input type="hidden" id="statusInput" name="statuses">
+    <h1 id="listTitle">Valitse asiakas</h1>
+    <ul id="customerList" class="customer-list">
+      {% for cust in customers %}
+      <li>
+        <span class="name">{{ cust.name }}</span>
+        <label class="switch">
+          <input type="checkbox" class="enabled-switch" data-name="{{ cust.id }}" {% if cust.enabled %}checked{% endif %}>
+          <span class="slider"></span>
+        </label>
+        <a href="{{ url_for('customers.edit', pk=cust.id) }}"
+          class="edit-btn btn-sm btn-primary">
+          Muokkaa
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    <a href="{{ url_for('customers.create') }}"
+      class="submit-btn"
+      style="margin-top:8px">
+      Luo uusi asiakas
+    </a>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ url_for('customers.static', filename='list.js') }}"></script>
+{% endblock %}

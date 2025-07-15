@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% block title %}Asiakashallinta{% endblock %}
+{% block styles %}
+  <link rel="stylesheet" href="{{ url_for('customers.static', filename='form.css') }}">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <form id="configForm" method="post">
+
+      <!-- hidden fields you can fill with JS -->
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+      <!-- action = Edit or Create -->
+      <input type="hidden" id="actionInput" name="action" value="{{ action }}">
+      <input type="text" id="pk" name="pk" value="" hidden>
+
+      <h1 id="formTitle">{{ 'Muokkaa: ' ~ customer.name if action == 'Edit' else 'Luo uusi asiakas' }}</h1>
+
+      <!-- Customer Name -->
+      <div class="form-group">
+        <label for="name">Asiakkaan nimi</label>
+        <input type="text" id="name" name="name"
+                placeholder="esim. yit" required value="">
+      </div>
+
+      <!-- Concern Numbers -->
+      <div class="form-group">
+        <label for="konserni">Konserninumerot</label>
+        <input type="text" id="konserni" name="konserni"
+                placeholder="esim. 2208, 1234" required>
+        <small>Erottele numerot pilkuilla</small>
+      </div>
+
+      <!-- Source Container -->
+      <div class="form-group">
+        <label for="source_container">Lähdekontti
+          <span class="info-icon"
+                data-tooltip="Kansio tai säiliö, josta asiakasdata luetaan. TÄYTYY täsmätä vingon päässä olevan hakemiston nimeen.">?</span>
+        </label>
+        <input type="text" id="source_container" name="source_container"
+                placeholder="esim. testi" required>
+      </div>
+
+      <!-- Destination Container -->
+      <div class="form-group">
+        <label for="destination_container">Kohdekontti
+          <span class="info-icon"
+                data-tooltip="Nimi saa sisältää vain pieniä kirjaimia, numeroita ja väliviivoja. Sen on alettava kirjaimella tai numerolla, &#10;eikä väliviiva saa olla nimen alussa, lopussa tai peräkkäin. Nimen pituuden on oltava 3–63 merkkiä.">?</span>
+        </label>
+        <input type="text" id="destination_container" name="destination_container"
+                placeholder="esim. testi" required
+                {% if action == 'Edit' %}readonly style="color: #969696;"{% endif %}>
+                {% if action == 'Edit' %}<small>Tätä tietoa ei voi muokata.</small>{% endif %}
+      </div>
+
+      <!-- File Format -->
+      <div class="form-group">
+        <label for="file_format">Tulostiedoston muoto
+          <span class="info-icon"
+                data-tooltip="Missä muodossa lopullinen tiedosto toimitetaan asiakkaalle.">?</span>
+        </label>
+        <select id="file_format" name="file_format" required>
+          <option value="json">JSON</option>
+          <option value="csv">CSV</option>
+        </select>
+      </div>
+
+      <!-- File Encoding -->
+      <div class="form-group">
+        <label for="file_encoding">Encoding
+          <span class="info-icon"
+                data-tooltip="Lopullisen tiedoston merkistön koodaus.">?</span>
+        </label>
+        <select id="file_encoding" name="file_encoding" required>
+          <option value="utf-8">UTF-8</option>
+          <option value="iso-8859-1">ISO-8859-1</option>
+          <option value="windows-1252">Windows-1252</option>
+        </select>
+      </div>
+
+      <!-- Extra Columns -->
+      <fieldset>
+        <legend>Lisäsarakkeet (valinnainen)
+          <span class="info-icon"
+                data-tooltip="Perussarakkeisiin (listattu alla) lisättävät asiakaskohtaiset sarakkeet.&#10;Sarakeavain = Vingon sarakenimi&#10;Näyttönimi = Asiakkaalle näkyvä nimi">?</span>
+        </legend>
+
+        <div id="extraColumnsContainer"><!-- populated by JS --></div>
+
+        <!-- template to clone with JS -->
+        <template id="extraColumnTemplate">
+          <div class="extra-columns-group">
+            <button type="button" class="removeColumnBtn">Poista</button>
+
+            <div class="form-group">
+              <label>Sarakeavain</label>
+              <input type="text" name="extra_key"
+                      placeholder="esim. PRTName">
+            </div>
+
+            <div class="form-group">
+              <label>Näyttönimi</label>
+              <input type="text" name="extra_name"
+                      placeholder="esim. Asiakasryhma">
+            </div>
+
+            <div class="form-group">
+              <label>Tietotyyppi</label>
+              <select name="extra_dtype">
+                <option value="string">String</option>
+                <option value="float">Float</option>
+                <option value="int">Integer</option>
+              </select>
+            </div>
+          </div>
+        </template>
+
+        <button type="button" id="addExtraColumnBtn">+ Lisää lisäsarake</button>
+      </fieldset>
+
+      <!-- Exclude Columns -->
+      <div class="form-group">
+        <label>
+          Poista perussarakkeista
+          <span class="info-icon"
+                data-tooltip="Valitse perussarakkeet, jotka haluat jättää pois asiakastiedostosta.">?</span>
+          <span id="excludeCount">0 valittu</span>
+        </label>
+
+        <div id="excludeList" class="exclude-list">
+            {% for key, col in base_columns.items() %}
+            {% set i = loop.index0 %}
+            <label class="exclude-item">
+              <input
+                type="checkbox"
+                id="exclude_columns"
+                name="exclude_columns-{{ i }}"
+                value="{{ col.name }}">
+              {{ col.name }}
+            </label>
+            {% endfor %}
+        </div>
+      </div>
+
+      <!-- Create Containers switch -->
+      {% if action == 'Create' %}
+      <div class="form-group">
+        <label for="create_containers_check">
+          Haluatko luoda lähde- ja kohdekontit tälle asiakkaalle?
+        </label>
+        <select name="create_containers_check"
+                id="create_containers_check">
+          <option value="true" selected>Kyllä</option>
+          <option value="false">Ei</option>
+        </select>
+      </div>
+      {% endif %}
+
+      <!-- Submit / Cancel buttons -->
+      <button type="submit" class="submit-btn" id="submitBtn">{{ "Luo asiakas" if action == "Create" else "Tallenna muutokset" }}</button>
+      <button type="button" id="cancelBtn" class="submit-btn"
+              style="margin-top:8px;background:#777;" onclick="window.history.back();">Peruuta</button>
+      <button type="button" id="deleteBtn" class="submit-btn"
+              style="margin-top:8px;background:#c00;" {% if action == 'Create' %}hidden{% endif %}>Poista asiakas</button>
+
+    </form>
+    <form id="deleteCustomerForm" method="POST" style="display:none;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    </form>
+
+  </div>
+  {% if action == 'Edit' %}
+    <script id="customerData" type="application/json">
+      {{ customer|tojson }}
+    </script>
+  {% endif %}
+  {% block scripts %}
+    <script src="{{ url_for('customers.static', filename='form.js') }}"></script>
+  {% endblock %}
+{% endblock %}
