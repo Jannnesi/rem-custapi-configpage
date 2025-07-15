@@ -13,9 +13,7 @@ def login_required(f):
     return wrapper
 
 
-auth_bp = Blueprint(
-    "auth", __name__, template_folder="templates", static_folder="static", url_prefix="/auth"
-)
+auth_bp = Blueprint("auth", __name__, template_folder="templates", static_folder="static")
 
 from . import routes  # noqa: F401, E402
 

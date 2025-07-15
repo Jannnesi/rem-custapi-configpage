@@ -3,10 +3,11 @@ from collections import OrderedDict
 from typing import Any
 
 from sqlalchemy.orm import Session, joinedload
-from src.admin_page.extensions import db as database
-from src.admin_page.models.base_column_model import BaseColumn
-from src.admin_page.models.email_model import EmailModel
-from src.admin_page.models.general_settings_model import GeneralSettings
+
+from admin_page.extensions import db as database
+from admin_page.models.base_column_model import BaseColumn
+from admin_page.models.email_model import EmailModel
+from admin_page.models.general_settings_model import GeneralSettings
 
 
 def get_base_columns(*, as_ordered=True, as_rows=False):

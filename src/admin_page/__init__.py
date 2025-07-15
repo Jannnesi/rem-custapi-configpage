@@ -1,12 +1,18 @@
 import logging
 
 from flask import Flask
-from src.admin_page.cli import register_commands
-from src.admin_page.extensions import (
+
+from admin_page.extensions import (
     csrf,
     db,
     fsession,
     migrate,
+)
+
+logging.basicConfig(
+    level=logging.INFO,  # show INFO+ from the root
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+    datefmt="%H:%M:%S",
 )
 
 
@@ -28,11 +34,13 @@ def create_app(config_object) -> Flask:
     with app.app_context():
         db.create_all()
 
-    from src.admin_page.blueprints import register_blueprints
+    from admin_page.blueprints import register_blueprints
 
     register_blueprints(app)
 
     # --- register CLI commands -------------
+    from admin_page.cli import register_commands
+
     register_commands(app)
     logger.info("Flask app created and configured.")
     return app

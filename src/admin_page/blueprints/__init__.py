@@ -15,6 +15,6 @@ _BLUEPRINT_PKGS = [
 def register_blueprints(app) -> None:
     """Import each package so it calls init_app(app)."""
     for path in _BLUEPRINT_PKGS:
-        mod = import_module(f"src.admin_page.{path}")
+        mod = import_module(f"admin_page.{path}")
         if hasattr(mod, "init_app"):
             mod.init_app(app)

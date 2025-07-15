@@ -14,11 +14,12 @@ import json
 from pathlib import Path
 
 import click
-from blueprints.customers.services import save_config  # existing helper
-from extensions import db
 from flask import current_app
-from models.base_column_model import BaseColumn
 from sqlalchemy.orm import Session
+
+from admin_page.blueprints.customers.services import save_config
+from admin_page.extensions import db
+from admin_page.models.base_column_model import BaseColumn
 
 # ---------------------------------------------------------------------------
 # helpers

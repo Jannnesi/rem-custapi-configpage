@@ -5,9 +5,10 @@ from collections.abc import MutableMapping, Sequence
 from typing import Any, Literal, overload
 
 from sqlalchemy.orm import Session
-from src.admin_page.extensions import db as database
-from src.admin_page.models.customer_model import Customer
 from werkzeug.exceptions import BadRequest, NotFound
+
+from admin_page.extensions import db as database
+from admin_page.models.customer_model import Customer
 
 
 def _dict_from_extras(items: list[Any]) -> dict[str, dict[str, str]] | None:

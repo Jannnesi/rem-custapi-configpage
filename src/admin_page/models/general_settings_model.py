@@ -1,10 +1,9 @@
 # app/models/general_settings_model.py
-
-from email_model import EmailModel
 from sqlalchemy import Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from . import Base
+from admin_page.models import Base
+from admin_page.models.email_model import EmailModel
 
 
 class GeneralSettings(Base):

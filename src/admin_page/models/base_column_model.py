@@ -3,7 +3,8 @@ from __future__ import annotations
 
 from sqlalchemy import Integer, String, func, select
 from sqlalchemy.orm import Mapped, mapped_column, object_session, validates
-from src.admin_page.models import Base  # your shared DeclarativeBase
+
+from admin_page.models import Base  # your shared DeclarativeBase
 
 
 class BaseColumn(Base):

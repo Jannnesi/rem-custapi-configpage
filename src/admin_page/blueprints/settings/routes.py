@@ -8,7 +8,8 @@ from flask import (
     url_for,
 )
 from sqlalchemy.exc import SQLAlchemyError
-from src.admin_page.models import EmailModel
+
+from admin_page.models import EmailModel
 
 from ..auth import login_required
 from . import settings_bp

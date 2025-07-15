@@ -1,7 +1,8 @@
 # app/models/email_model.py
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from src.admin_page.models import Base
+
+from admin_page.models import Base
 
 
 class EmailModel(Base):
