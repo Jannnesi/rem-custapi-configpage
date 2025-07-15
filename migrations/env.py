@@ -50,7 +50,9 @@ db = app.extensions["migrate"].db  # same object as admin_page.extensions.db
 # Alembic config tweaks
 # ---------------------------------------------------------------------------
 config.set_main_option("sqlalchemy.url", str(db.engine.url).replace("%", "%%"))
-target_metadata = db.metadata  # <-- single source of truth
+from admin_page import models  # noqa: F401, E402
+
+target_metadata = db.metadata
 
 # Uncomment if you only want the “config” schema; otherwise drop it.
 # def include_object(obj, name, type_, reflected, compare_to):
@@ -75,12 +77,13 @@ def run_migrations_offline() -> None:
         "literal_binds": True,
         "compare_type": True,
         "render_as_batch": True,
-        # "include_object": include_object,
     }
     context.configure(
         url=str(db.engine.url),
         target_metadata=target_metadata,
         **cfg,
+        include_schemas=True,
+        version_table_schema="config",
     )
     with context.begin_transaction():
         context.run_migrations()
@@ -100,6 +103,8 @@ def run_migrations_online() -> None:
             connection=connection,
             target_metadata=target_metadata,
             **cfg,
+            include_schemas=True,
+            version_table_schema="config",
         )
         with context.begin_transaction():
             context.run_migrations()

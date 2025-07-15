@@ -10,7 +10,7 @@ class EmailModel(Base):
     __table_args__ = {"schema": "config"}
 
     id = Column(Integer, primary_key=True)
-    settings_id = Column(Integer, ForeignKey("general_settings.id", ondelete="CASCADE"))
+    settings_id = Column(Integer, ForeignKey("config.general_settings.id", ondelete="CASCADE"))
     address = Column(String(255), nullable=False)
     display_name = Column(String(100), nullable=False)
 

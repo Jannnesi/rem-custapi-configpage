@@ -1,8 +1,6 @@
-from sqlalchemy import MetaData
-from sqlalchemy.orm import declarative_base
+from admin_page.extensions import db
 
-metadata = MetaData(schema="config")
-Base = declarative_base()
+Base = db.Model
 
 from admin_page.models.base_column_model import BaseColumn  # noqa: E402, F401
 from admin_page.models.customer_model import Customer  # noqa: E402, F401

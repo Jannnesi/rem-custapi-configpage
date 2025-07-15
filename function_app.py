@@ -2,9 +2,9 @@
 import azure.functions as func
 from app import create_app
 
-from admin_page.config import Dev
+from admin_page.config import Prod
 
-flask_app = create_app(Dev)
+flask_app = create_app(Prod)
 
 # 1. expose Flask through the dedicated v2 helper
 app = func.WsgiFunctionApp(  # NOTE: WsgiFunctionApp, *not* FunctionApp
