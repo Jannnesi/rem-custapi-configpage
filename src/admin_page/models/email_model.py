@@ -7,6 +7,7 @@ from admin_page.models import Base
 
 class EmailModel(Base):
     __tablename__ = "emails"
+    __table_args__ = {"schema": "config"}
 
     id = Column(Integer, primary_key=True)
     settings_id = Column(Integer, ForeignKey("general_settings.id", ondelete="CASCADE"))

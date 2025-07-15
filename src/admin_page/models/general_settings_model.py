@@ -8,6 +8,7 @@ from admin_page.models.email_model import EmailModel
 
 class GeneralSettings(Base):
     __tablename__ = "general_settings"
+    __table_args__ = {"schema": "config"}
 
     id: Mapped[int] = mapped_column(primary_key=True)
     retry_attempts: Mapped[int] = mapped_column(Integer, nullable=False, default=3)

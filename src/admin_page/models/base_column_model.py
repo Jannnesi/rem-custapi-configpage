@@ -9,6 +9,7 @@ from admin_page.models import Base  # your shared DeclarativeBase
 
 class BaseColumn(Base):
     __tablename__ = "base_columns"
+    __table_args__ = {"schema": "config"}
 
     # ── columns ──────────────────────────────────────────────────────────
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)

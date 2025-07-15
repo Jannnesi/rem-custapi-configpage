@@ -31,9 +31,6 @@ def create_app(config_object) -> Flask:
     fsession.init_app(app)
     migrate.init_app(app, db)
 
-    with app.app_context():
-        db.create_all()
-
     from admin_page.blueprints import register_blueprints
 
     register_blueprints(app)
